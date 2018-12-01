@@ -151,6 +151,33 @@ public class NBGApiHandler {
         return clientResponse[0];
     }
 
+    public String getAccountInformation() {
+        final String account = getAccount();
+        try {
+            JSONObject accountJsonObject = new JSONObject(account);
+            String clientResponse = "";
+            final JSONArray ownersJsonArray = accountJsonObject.getJSONArray("owners");
+            clientResponse += "Owners: ";
+            for (int i = 0; i < ownersJsonArray.length(); i++) {
+                clientResponse += ownersJsonArray.getJSONObject(i).getString("display_name");
+                if (i + 1 < ownersJsonArray.length()) {
+                    clientResponse += ", ";
+                }
+            }
+            clientResponse += "\n";
+            clientResponse += "Account Balance: " +
+                    accountJsonObject.getJSONObject("AccountBalance").getString("amount") + " " +
+                    accountJsonObject.getJSONObject("AccountBalance").getString("currency");
+            clientResponse += "\n";
+            clientResponse += "IBAN: " +
+                    accountJsonObject.getString("IBAN");
+            return clientResponse;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+    }
+
     public String getAccountBalance() {
         final String account = getAccount();
         try {
