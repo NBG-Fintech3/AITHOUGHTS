@@ -78,7 +78,7 @@ public class NBGApiHandler {
         Request request = new Request.Builder()
                 .url("https://apis.nbg.gr/public/sandbox/obp.account.sandbox/v1.1/sandbox/" + sandboxID)
                 .get()
-                .addHeader("x-ibm-client-id", "")
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
                 .addHeader("request_id", "REPLACE_THIS_VALUE")
                 .addHeader("application_id", "REPLACE_THIS_VALUE")
                 .addHeader("provider_username", "NBG")
@@ -118,7 +118,7 @@ public class NBGApiHandler {
         Request request = new Request.Builder()
                 .url("https://apis.nbg.gr/public/sandbox/obp.account.sandbox/v1.1/obp/my/banks/" + bankID + "/accounts/" + accountID + "/account")
                 .get()
-                .addHeader("x-ibm-client-id", "f05576d7-0b56-4080-af58-a44cb8c47f8f")
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
                 .addHeader("request_id", "REPLACE_THIS_VALUE")
                 .addHeader("application_id", "REPLACE_THIS_VALUE")
                 .addHeader("provider_username", "NBG")
@@ -182,6 +182,143 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            return "Does not exist";
+        }
+    }
+
+    public String getAccountCards() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.card.sandbox/v1/obp/cards")
+                .get()
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
+    public String getCardName() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("name_on_card");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Does not exist";
+        }
+    }
+
+    public String getCardId() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("cardId");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Does not exist";
+        }
+    }
+
+    public String getCardBankNumber() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("bank_card_number");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Does not exist";
+        }
+    }
+
+    public String getCardIssueNumber() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("issue_number");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Does not exist";
+        }
+    }
+
+    public String getCardSerialNumber() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("serial_number");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Does not exist";
+        }
+    }
+
+    public String getCardExpiresDate() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            final String clientResponse = cardJsonObject.getString("expires_date");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }

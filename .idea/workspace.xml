@@ -32,11 +32,11 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-5092">
+            <state relative-caret-position="551">
               <caret line="71" selection-start-line="71" selection-end-line="71" />
             </state>
           </provider>
@@ -45,8 +45,8 @@
       <file leaf-file-name="NBGApiHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="72">
+              <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#644#645#0" expanded="true" />
@@ -59,7 +59,7 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="656">
+            <state relative-caret-position="855">
               <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
             </state>
           </provider>
@@ -2364,7 +2364,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="260" />
     <option name="y" value="20" />
     <option name="width" value="1400" />
@@ -2375,9 +2375,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2403,6 +2400,9 @@
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2535,44 +2535,87 @@
     <frame x="0" y="0" width="1920" height="1032" extended-state="6" />
     <editor active="true" />
     <layout>
+      <window_info anchor="bottom" id="Android Profiler" order="7" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Android Profiler" />
-      <window_info anchor="right" id="Palette&#9;" />
-      <window_info id="Image Layers" />
-      <window_info id="Build Variants" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Build Variants" order="2" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Logcat" />
+      <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" order="7" />
+      <window_info anchor="bottom" id="Logcat" order="7" />
       <window_info id="Captures" order="2" weight="0.25" />
-      <window_info id="Capture Tool" />
-      <window_info id="Designer" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="Designer" order="2" />
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24973205" />
-      <window_info anchor="bottom" id="Build" weight="0.3295711" />
-      <window_info anchor="right" id="Gradle" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.3295711" />
+      <window_info anchor="right" id="Gradle" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Device File Explorer" order="3" side_tool="true" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="656">
+        <state relative-caret-position="855">
+          <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1349">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#644#645#0" expanded="true" />
+            <element signature="e#687#688#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
           <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
         </state>
       </provider>
@@ -2599,15 +2642,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5092">
+        <state relative-caret-position="551">
           <caret line="71" selection-start-line="71" selection-end-line="71" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="72">
+          <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#644#645#0" expanded="true" />
