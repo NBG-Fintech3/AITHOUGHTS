@@ -234,7 +234,7 @@ public class NBGApiHandler {
         Request request = new Request.Builder()
                 .url("https://apis.nbg.gr/public/sandbox/obp.account.sandbox/v1.1/obp/my/banks/" + bankID + "/accounts/" + accountID + "/beneficiaries")
                 .get()
-                .addHeader("x-ibm-client-id", "f05576d7-0b56-4080-af58-a44cb8c47f8f")
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
                 .addHeader("request_id", "REPLACE_THIS_VALUE")
                 .addHeader("application_id", "REPLACE_THIS_VALUE")
                 .addHeader("provider_username", "NBG")
@@ -445,7 +445,242 @@ public class NBGApiHandler {
         }
     }
 
+    public String getTransactionRequests() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.payment.sandbox/v1.1/obp/banks/" + bankID + "/accounts/" + accountID + "/" + viewID + "/transaction-requests")
+                .get()
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
+    public String getAllTransactionRequests() {
+        final String transactionRequests = getTransactionRequests();
+        try {
+            JSONObject transactionRequestsJsonObject = new JSONObject(transactionRequests);
+            JSONArray transactionRequestsJsonArray = transactionRequestsJsonObject.getJSONArray("transaction_requests_with_charges");
+            String clientResponse = "";
+            for (int i = 0; i < transactionRequestsJsonArray.length(); i++) {
+                JSONObject transactionRequestJsonObject = transactionRequestsJsonArray.getJSONObject(i);
+                clientResponse += "From: " + transactionRequestJsonObject.getJSONObject("from").getString("account_id");
+                clientResponse += "\n";
+                clientResponse += "To: " + transactionRequestJsonObject.getJSONObject("details").getJSONObject("to").getString("account_id");
+                clientResponse += "\n";
+                clientResponse += "Amount: " +
+                        transactionRequestJsonObject.getJSONObject("details").getJSONObject("value").getString("amount") + " " +
+                        transactionRequestJsonObject.getJSONObject("details").getJSONObject("value").getString("currency");
+                clientResponse += "\n";
+                clientResponse += "Charge Policy: " + transactionRequestJsonObject.getJSONObject("charge").getString("summary");
+                clientResponse += "\n";
+                clientResponse += "Request Date: " + simplifyNBGDate(transactionRequestJsonObject.getString("start_date"));
+                clientResponse += "\n";
+                clientResponse += "Status: " + transactionRequestJsonObject.getString("status");
+                clientResponse += "\n\n";
+            }
+            if (clientResponse.length() <= 1) {
+                return "No pending transactions";
+            }
+            return clientResponse;
+
+        } catch (JSONException e) {
+            return "Does not exist";
+        }
+    }
+
+    public String getInitiatedTransactionRequests() {
+        final String transactionRequests = getTransactionRequests();
+        try {
+            JSONObject transactionRequestsJsonObject = new JSONObject(transactionRequests);
+            JSONArray transactionRequestsJsonArray = transactionRequestsJsonObject.getJSONArray("transaction_requests_with_charges");
+            String clientResponse = "";
+            for (int i = 0; i < transactionRequestsJsonArray.length(); i++) {
+                JSONObject transactionRequestJsonObject = transactionRequestsJsonArray.getJSONObject(i);
+                if (transactionRequestJsonObject.getString("status").equals("INITIATED")) {
+                    clientResponse += "From: " + transactionRequestJsonObject.getJSONObject("from").getString("account_id");
+                    clientResponse += "\n";
+                    clientResponse += "To: " + transactionRequestJsonObject.getJSONObject("details").getJSONObject("to").getString("account_id");
+                    clientResponse += "\n";
+                    clientResponse += "Amount: " +
+                            transactionRequestJsonObject.getJSONObject("details").getJSONObject("value").getString("amount") + " " +
+                            transactionRequestJsonObject.getJSONObject("details").getJSONObject("value").getString("currency");
+                    clientResponse += "\n";
+                    clientResponse += "Charge Policy: " + transactionRequestJsonObject.getJSONObject("charge").getString("summary");
+                    clientResponse += "\n";
+                    clientResponse += "Request Date: " + simplifyNBGDate(transactionRequestJsonObject.getString("start_date"));
+                    clientResponse += "\n\n";
+                }
+            }
+            if (clientResponse.length() <= 1) {
+                return "No pending transactions";
+            }
+            return clientResponse;
+
+        } catch (JSONException e) {
+            return "Does not exist";
+        }
+    }
+
+    public String getRecentTransactionRequest() {
+        final String transactionRequests = getTransactionRequests();
+        try {
+            JSONObject transactionRequestsJsonObject = new JSONObject(transactionRequests);
+            JSONArray transactionRequestsJsonArray = transactionRequestsJsonObject.getJSONArray("transaction_requests_with_charges");
+            JSONObject recentTransactionRequestJsonArray = null;
+            for (int i = 0; i < transactionRequestsJsonArray.length(); i++) {
+                JSONObject transactionRequestJsonObject = transactionRequestsJsonArray.getJSONObject(i);
+                if (transactionRequestJsonObject.getString("status").equals("INITIATED")) {
+                    recentTransactionRequestJsonArray = transactionRequestJsonObject;
+                }
+            }
+            String clientResponse = "";
+            if (recentTransactionRequestJsonArray != null) {
+                clientResponse += "From: " + recentTransactionRequestJsonArray.getJSONObject("from").getString("account_id");
+                clientResponse += "\n";
+                clientResponse += "To: " + recentTransactionRequestJsonArray.getJSONObject("details").getJSONObject("to").getString("account_id");
+                clientResponse += "\n";
+                clientResponse += "Amount: " +
+                        recentTransactionRequestJsonArray.getJSONObject("TransactionAmount").getString("amount") + " " +
+                        recentTransactionRequestJsonArray.getJSONObject("TransactionAmount").getString("currency");
+                clientResponse += "\n";
+                clientResponse += "Charge Policy: " + recentTransactionRequestJsonArray.getJSONObject("charge").getString("summary");
+                clientResponse += "\n";
+                clientResponse += "Request Date: " + simplifyNBGDate(recentTransactionRequestJsonArray.getString("start_date"));
+            }
+            else {
+                return "No pending transactions";
+            }
+            return clientResponse;
+
+        } catch (JSONException e) {
+            return "Does not exist";
+        }
+    }
+
+    public String answerTransactionRequest() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "{\"id\":\"8f3b7cbb-4c2d-4dec-8039-a38e2e673a58\",\"answer\":12345}");
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.payment.sandbox/v1.1/obp/banks/" + bankID + "/accounts/" + accountID + "/" + viewID + "/transaction-request-types/" + "SEPA" + "/transaction-requests/" + "8f3b7cbb-4c2d-4dec-8039-a38e2e673a58" + "/challenge")
+                .post(body)
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("content-type", "text/json")
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
+    public String createSepaPayment() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, "{\"extensions\":{\"beneficiaryName\":\"" + getAccountBenefeciaries() + "\",\"challengeExpiration\":\"0001-01-01T00:00:00\",\"challengeText\":\"Test challenge text\",\"challengeType\":\"SMS\"},\"to\":{\"iban\":\"" + getAccountIBAN() + "\"}, \"value\":{\"currency\":\"EUR\",\"amount\":10.0},\"charge_policy\":\"OUR\",\"description\":\"Test SEPA payment.\"}");
+        // TODO: get user IBAN and benefeciaries
+        // RequestBody body = RequestBody.create(mediaType, "{\"extensions\":{\"beneficiaryName\":\"" + getAccountBenefeciaries() + "\"},\"to\":{\"iban\":\"" + getAccountIBAN() + "\"},\"value\":{\"currency\":\"EUR\",\"amount\":10.0},\"charge_policy\":\"OUR\",\"description\":\"TEST\"}");
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.payment.sandbox/v1.1/obp/banks/" + bankID + "/accounts/" + accountID + "/" + viewID + "/transaction-request-types/sepa/transaction-requests")
+                .post(body)
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("content-type", "text/json")
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
     private String simplifyNBGDate(String date) {
-        return date.split("T")[0].replaceAll("-", "/");
+        String simplifiedDate = date.split("T")[0].replaceAll("-", "/");
+        String[] yearMonthDay = simplifiedDate.split("/");
+        return yearMonthDay[2] + "/" + yearMonthDay[1] + "/" + yearMonthDay[0];
     }
 }
