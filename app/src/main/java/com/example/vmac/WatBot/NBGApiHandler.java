@@ -185,6 +185,7 @@ public class NBGApiHandler {
             final String clientResponse = accountJsonObject.getJSONObject("AccountBalance").getString("amount");
             return clientResponse;
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Error";
         }
     }
@@ -196,6 +197,7 @@ public class NBGApiHandler {
             final String clientResponse = accountJsonObject.getString("IBAN");
             return clientResponse;
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Error";
         }
     }
@@ -209,6 +211,7 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }
@@ -222,6 +225,7 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }
@@ -283,6 +287,65 @@ public class NBGApiHandler {
         }
         return clientResponse[0];
     }
+
+    public String getAccountBenefeciariesFromAccountId(String userAccountID) {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.account.sandbox/v1.1/obp/my/banks/" + bankID + "/accounts/" + userAccountID + "/beneficiaries")
+                .get()
+                .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                JSONArray tempBenefeciariesObject = null;
+                try {
+                    tempBenefeciariesObject = new JSONArray(json);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONObject benefeciaryName = null;
+                try {
+                    benefeciaryName = tempBenefeciariesObject.getJSONObject(0); // first name!
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    clientResponse[0] = benefeciaryName.getString("name");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
 
     public String getAccountCards() {
         final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -436,7 +499,7 @@ public class NBGApiHandler {
             JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
             // Get first card
             final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
-            final String clientResponse = cardJsonObject.getString("expires_date");
+            final String clientResponse = simplifyNBGDate(cardJsonObject.getString("expires_date"));
             return clientResponse;
 
         } catch (JSONException e) {
@@ -515,6 +578,7 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }
@@ -548,6 +612,7 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }
@@ -584,6 +649,7 @@ public class NBGApiHandler {
             return clientResponse;
 
         } catch (JSONException e) {
+            e.printStackTrace();
             return "Does not exist";
         }
     }
@@ -593,10 +659,13 @@ public class NBGApiHandler {
         final String[] clientResponse = new String[1];
         clientResponse[0] = "Not working";
 
+        String recentTransactionRequest = getRecentTransactionRequest();
+
+
         MediaType mediaType = MediaType.parse("application/json");
         RequestBody body = RequestBody.create(mediaType, "{\"id\":\"8f3b7cbb-4c2d-4dec-8039-a38e2e673a58\",\"answer\":12345}");
         Request request = new Request.Builder()
-                .url("https://apis.nbg.gr/public/sandbox/obp.payment.sandbox/v1.1/obp/banks/" + bankID + "/accounts/" + accountID + "/" + viewID + "/transaction-request-types/" + "SEPA" + "/transaction-requests/" + "8f3b7cbb-4c2d-4dec-8039-a38e2e673a58" + "/challenge")
+                .url("https://apis.nbg.gr/public/sandbox/obp.payment.sandbox/v1.1/obp/banks/" + bankID + "/accounts/" + accountID + "/" + viewID + "/transaction-request-types/" + "SEPA" + "/transaction-requests/" + ""  + "/challenge")
                 .post(body)
                 .addHeader("x-ibm-client-id", "REPLACE_THIS_VALUE")
                 .addHeader("request_id", "REPLACE_THIS_VALUE")

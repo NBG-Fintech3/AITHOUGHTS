@@ -36,8 +36,8 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state>
+              <caret column="12" selection-end-line="1" />
             </state>
           </provider>
         </entry>
@@ -45,12 +45,12 @@
       <file leaf-file-name="NBGApiHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="125">
-              <caret line="71" selection-start-line="71" selection-end-line="71" />
+            <state relative-caret-position="133">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#644#645#0" expanded="true" />
-                <element signature="e#687#688#0" expanded="true" />
+                <element signature="e#632#633#0" expanded="true" />
+                <element signature="e#675#676#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -99,6 +99,11 @@
         <option value="Class" />
       </list>
     </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>x-ibm-client-id&quot;</find>
+    </findStrings>
   </component>
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
@@ -2375,9 +2380,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -2403,6 +2407,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -2603,12 +2608,55 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1349">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7866">
           <caret line="414" lean-forward="true" selection-start-line="414" selection-end-line="414" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#644#645#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2650,8 +2698,8 @@
           <caret line="218" lean-forward="true" selection-start-line="218" selection-end-line="218" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#644#645#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2693,8 +2741,8 @@
           <caret line="152" lean-forward="true" selection-start-line="152" selection-end-line="152" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#644#645#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2736,8 +2784,8 @@
           <caret line="71" selection-start-line="71" selection-end-line="71" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#644#645#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2771,19 +2819,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state>
+          <caret column="12" selection-end-line="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/vmac/WatBot/NBGApiHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
+        <state relative-caret-position="133">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#644#645#0" expanded="true" />
-            <element signature="e#687#688#0" expanded="true" />
+            <element signature="e#632#633#0" expanded="true" />
+            <element signature="e#675#676#0" expanded="true" />
           </folding>
         </state>
       </provider>
