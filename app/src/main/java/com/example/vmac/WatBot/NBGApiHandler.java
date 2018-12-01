@@ -109,4 +109,80 @@ public class NBGApiHandler {
         }
         return clientResponse[0];
     }
+
+    public String getAccount() {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        final String[] clientResponse = new String[1];
+        clientResponse[0] = "Not working";
+
+        Request request = new Request.Builder()
+                .url("https://apis.nbg.gr/public/sandbox/obp.account.sandbox/v1.1/obp/my/banks/" + bankID + "/accounts/" + accountID + "/account")
+                .get()
+                .addHeader("x-ibm-client-id", "f05576d7-0b56-4080-af58-a44cb8c47f8f")
+                .addHeader("request_id", "REPLACE_THIS_VALUE")
+                .addHeader("application_id", "REPLACE_THIS_VALUE")
+                .addHeader("provider_username", "NBG")
+                .addHeader("provider_id", "NBG.gr")
+                .addHeader("provider", "NBG")
+                .addHeader("sandbox_id", sandboxID)
+                .addHeader("accept", "text/json")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                countDownLatch.countDown();
+                clientResponse[0] = "Network Error";
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final String json = response.body().string();
+                clientResponse[0] = json;
+                countDownLatch.countDown();
+            }
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return clientResponse[0];
+    }
+
+    public String getAccountBalance() {
+        final String account = getAccount();
+        try {
+            JSONObject accountJsonObject = new JSONObject(account);
+            final String clientResponse = accountJsonObject.getJSONObject("AccountBalance").getString("amount");
+            return clientResponse;
+        } catch (JSONException e) {
+            return "Error";
+        }
+    }
+
+    public String getAccountIBAN() {
+        final String account = getAccount();
+        try {
+            JSONObject accountJsonObject = new JSONObject(account);
+            final String clientResponse = accountJsonObject.getString("IBAN");
+            return clientResponse;
+        } catch (JSONException e) {
+            return "Error";
+        }
+    }
+
+    public String getAccountLedger() {
+        final String account = getAccount();
+        try {
+            JSONObject accountJsonObject = new JSONObject(account);
+            final JSONObject extensions = accountJsonObject.getJSONObject("extensions");
+            final String clientResponse = extensions.getString("ledgerBalance");
+            return clientResponse;
+
+        } catch (JSONException e) {
+            return "Does not exist";
+        }
+    }
 }
