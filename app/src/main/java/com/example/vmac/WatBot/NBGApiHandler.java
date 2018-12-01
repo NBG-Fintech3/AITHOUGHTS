@@ -325,6 +325,30 @@ public class NBGApiHandler {
         return clientResponse[0];
     }
 
+    public String getCardInformation() {
+        final String cards = getAccountCards();
+        try {
+            JSONObject cardsJsonObject = new JSONObject(cards);
+            JSONArray cardsJsonArray = new JSONArray(cardsJsonObject.getString("cards"));
+            // Get first card
+            final JSONObject cardJsonObject = cardsJsonArray.getJSONObject(0);
+            String clientResponse = "";
+            clientResponse += "Name on Card: " + cardJsonObject.getString("name_on_card");
+            clientResponse += "\n";
+            clientResponse += "Bank Card Number: " + cardJsonObject.getString("bank_card_number");
+            clientResponse += "\n";
+            clientResponse += "Issue Number: " + cardJsonObject.getString("issue_number");
+            clientResponse += "\n";
+            clientResponse += "Serial Number: " + cardJsonObject.getString("serial_number");
+            clientResponse += "\n";
+            clientResponse += "Expiration Date: " + simplifyNBGDate(cardJsonObject.getString("expires_date"));
+            return clientResponse;
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "Error";
+        }
+    }
+
     public String getCardName() {
         final String cards = getAccountCards();
         try {
@@ -419,5 +443,9 @@ public class NBGApiHandler {
             e.printStackTrace();
             return "Does not exist";
         }
+    }
+
+    private String simplifyNBGDate(String date) {
+        return date.split("T")[0].replaceAll("-", "/");
     }
 }
