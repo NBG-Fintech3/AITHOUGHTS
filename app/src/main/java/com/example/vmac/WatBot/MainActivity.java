@@ -20,7 +20,13 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import java.sql.Timestamp;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneHelper;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneInputStream;
 import com.ibm.watson.developer_cloud.android.library.audio.StreamPlayer;
@@ -70,7 +76,13 @@ public class MainActivity extends AppCompatActivity {
   private SpeechToText speechService;
   private TextToSpeech textToSpeech;
 
-  private void createServices() {
+
+  private FirebaseStorage storage;
+  private StorageReference storageRef;
+  private NBGApiHandler nbg;
+
+
+    private void createServices() {
     watsonAssistant = new Assistant("2018-11-08", new IamOptions.Builder()
       .apiKey(mContext.getString(R.string.assistant_apikey))
       .build());
@@ -113,6 +125,10 @@ public class MainActivity extends AppCompatActivity {
     this.inputMessage.setText("");
     this.initialRequest = true;
 
+    storage = FirebaseStorage.getInstance();
+    storageRef = storage.getReference();
+    nbg = new NBGApiHandler();
+
 
     int permission = ContextCompat.checkSelfPermission(this,
       Manifest.permission.RECORD_AUDIO);
@@ -123,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
     } else {
       Log.i(TAG, "Permission to record was already granted");
     }
+
+
 
 
     recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
@@ -159,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     createServices();
     sendMessage();
+
   }
 
   ;
@@ -239,18 +258,34 @@ public class MainActivity extends AppCompatActivity {
             .build();
           MessageResponse response = watsonAssistant.message(options).execute();
 
+           // final Message testMessage = new Message();
+
           final Message outMessage = new Message();
           if (response != null &&
             response.getOutput() != null &&
             !response.getOutput().getGeneric().isEmpty() &&
             "text".equals(response.getOutput().getGeneric().get(0).getResponseType())) {
-            outMessage.setMessage(response.getOutput().getGeneric().get(0).getText());
             outMessage.setId("2");
+            String textToVoice;
+            // checking if the bot response has to call an internal function
+            if(response.getOutput().getActions() != null){
+                String textModifiedByApi[] = apiCaller(response.getOutput().getGeneric().get(0).getText(),
+                        response.getOutput().getActions().get(0).getName());
+                outMessage.setMessage(textModifiedByApi[0]);
+                textToVoice = textModifiedByApi[1];
+            }
+            else{
+                outMessage.setMessage(response.getOutput().getGeneric().get(0).getText());
+                textToVoice = response.getOutput().getGeneric().get(0).getText();
+            }
+
+            System.out.println(outMessage.getMessage());
 
             messageArrayList.add(outMessage);
+            uploadConversations(outMessage.getMessage());
 
             // speak the message
-            new SayTask().execute(outMessage.getMessage());
+            new SayTask().execute(textToVoice);
 
             runOnUiThread(new Runnable() {
               public void run() {
@@ -400,6 +435,108 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+    // One API example function
+    private String balance() { return "5"; }
+    private String iban() { return "3867328236"; }
+    private String interest_rate() { return "6.5"; }
+    private String expiration_date() { return "1/1/2022"; }
+    private String card_info() { return "blah blah"; }
+    private String account_info() { return "blah blah"; }
+    private String transaction_history() { return "blah blah"; }
+    private String pending_transactions() { return "blah blah"; }
+    private String recent_transaction() { return "blah blah"; }
+
+   // Function that calls the API functions of the NBG
+   private String[] apiCaller(String text, String function){
+      String[] response = new String[2];
+       String raw_response;
+      switch (function){
+          case "balance":
+              raw_response = nbg.getAccountBalance();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "iban":
+              raw_response = nbg.getAccountIBAN();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = "<speak>" + text.replaceFirst("var",
+                      "<prosody rate=\"x-slow\"><say-as interpret-as=\"digits\">"
+                              + raw_response + "</say-as></prosody>") + "</speak>";
+              break;
+          case "interest_rate":
+              raw_response = nbg.getAccountInterestRate();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "expiration_date":
+              raw_response = nbg.getCardExpiresDate();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = "<speak>" + text.replaceFirst("var",
+                      "<say-as interpret-as=\"date\" format=\"dmy\">"
+                              + raw_response + "</say-as>") + "</speak>";
+              break;
+          case "card_info":
+              raw_response = nbg.getCardInformation();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "account_info":
+              raw_response = nbg.getAccountInformation();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "transaction_history":
+              raw_response = nbg.getAllTransactionRequests();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "pending_transactions":
+              raw_response = nbg.getInitiatedTransactionRequests();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          case "recent_transaction":
+              raw_response = nbg.getRecentTransactionRequest();
+              response[0] = text.replaceFirst("var", raw_response);
+              response[1] = text.replaceFirst("var", raw_response);
+              break;
+          default:
+              response[0] = response[1] = text;
+      }
+      return response;
+   }
+
+    /*public static AmazonS3 createClient(String api_key, String service_instance_id, String endpoint_url, String location)
+    {
+        AWSCredentials credentials = new BasicIBMOAuthCredentials(api_key, service_instance_id);
+        ClientConfiguration clientConfig = new ClientConfiguration().withRequestTimeout(5000);
+        clientConfig.setUseTcpKeepAlive(true);
+
+        AmazonS3 cos = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint_url, location)).withPathStyleAccessEnabled(true)
+                .withClientConfiguration(clientConfig).build();
+
+        return cos;
+    }*/
+
+    public void uploadConversations(String message){
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        StorageReference mountainsRef = storageRef.child(timestamp.toString() + ".txt");
+        byte[] data = message.getBytes();
+        UploadTask uploadTask = mountainsRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                // ...
+            }
+        });
+    }
 
 }
 
